@@ -150,9 +150,6 @@ func makeHTTPGrabber(config *Config, grabData GrabData) func(string) error {
 			tlsConfig.RootCAs = config.RootCAPool
 			tlsConfig.HeartbeatEnabled = true
 			tlsConfig.ClientDSAEnabled = true
-			//		if !config.NoSNI && session.domain != "" {
-			//			tlsConfig.ServerName = session.domain
-			//		}
 			if config.DHEOnly {
 				tlsConfig.CipherSuites = ztls.DHECiphers
 			}
@@ -189,6 +186,10 @@ func makeHTTPGrabber(config *Config, grabData GrabData) func(string) error {
 			if config.GatherSessionTicket {
 				tlsConfig.ForceSessionTicketExt = true
 			}
+			if !config.NoSNI && addr != "" {
+				tlsConfig.ServerName = addr
+			}
+
 		}
 
 		transport := &http.Transport{
